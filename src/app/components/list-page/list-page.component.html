@@ -1,0 +1,76 @@
+<div class="content">
+    <div class="header mb-5">
+        <div class="text-header" style="text-align: center; font-weight: bold;color: rgb(255, 255, 255);">
+            <h1>Crypto App</h1>
+            <h4>latest top 10</h4>
+        </div>
+        <div class="silder" style="position: absolute;
+        width: 100%;
+        top: 50%;">
+            <marquee onmouseout="start()" onmouseover="stop()" behavior="scroll" direction="left" loop="infinite">
+                <div class="row">
+                    <div class="col-1"></div>
+                    <div class="col-1" *ngFor="let trend of trendingData;let index = index">
+                        <div class="trending-content" style="color: rgb(255, 255, 255);">
+                            <img [src]='trend.image' alt="photo" width = 80>
+                            <div class="trending-body">
+                                <h5>{{trend.symbol | uppercase}} <span>{{trend.market_cap_change_percentage_24h}}%</span></h5>
+                                <p>{{trend.current_price}}{{this.currentCurrency}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-1"></div>
+                </div>
+            </marquee>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <!-- TABLE -->
+    <mat-form-field>
+        <mat-label>Filter</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Ex. BTS" #input>
+    </mat-form-field>
+    
+    <div class="mat-elevation-z8">
+        <table mat-table [dataSource]="dataSource" matSort>
+    
+        <!-- ID Column -->
+          <ng-container matColumnDef="symbol">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Coins </th>
+            <td style ='padding:10px' mat-cell *matCellDef="let row">
+                <img [src]="row.image" width="50" alt="">
+                <span>{{row.symbol | uppercase}}</span> 
+                </td>
+          </ng-container>
+      
+          <!-- Progress Column -->
+          <ng-container matColumnDef="current_price">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>  Current Price </th>
+            <td style ='padding:10px' mat-cell *matCellDef="let row"> {{row.current_price | currency:'USD'}} </td>
+          </ng-container>
+      
+          <!-- Name Column -->
+          <ng-container matColumnDef="price_change_percentage_24h">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> 24H Change</th>
+            <td style ='padding:10px' mat-cell *matCellDef="let row"> {{row.market_cap_change_percentage_24h}} </td>
+          </ng-container>
+      
+          <!-- Fruit Column -->
+          <ng-container matColumnDef="market_cap">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Market Cap </th>
+            <td style ='padding:10px' mat-cell *matCellDef="let row"> {{row.market_cap}} </td>
+          </ng-container>
+      
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr  class="main-tr" (click)="goThroughDetails(row)" mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      
+          <!-- Row shown when there is no matching data. -->
+          <tr class="mat-row" *matNoDataRow>
+            <td style ='padding:10px' class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+          </tr>
+        </table>
+      
+    </div>
+    <mat-paginator [pageSizeOptions]="[10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+</div>
